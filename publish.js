@@ -14,7 +14,7 @@ const { Web3Storage, getFilesFromPath } = require('web3.storage')
 // const BchMessageLib = require('bch-message-lib/index')
 const fs = require('fs')
 
-async function publish() {
+async function publish () {
   try {
     // Get the Filecoin token from the environment variable.
     const filecoinToken = process.env.FILECOIN_TOKEN
@@ -64,7 +64,7 @@ async function publish() {
 }
 publish()
 
-function getFileList() {
+function getFileList () {
   const fileAry = []
 
   return new Promise((resolve, reject) => {
@@ -81,7 +81,7 @@ function getFileList() {
   })
 }
 
-async function uploadToFilecoin(fileAry, token) {
+async function uploadToFilecoin (fileAry, token) {
   const storage = new Web3Storage({ token })
 
   const files = []
