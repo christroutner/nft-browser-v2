@@ -3,61 +3,35 @@
 */
 
 // Global npm libraries
-import React, { useState } from 'react'
-import Toast from 'react-bootstrap/Toast'
-import Button from 'react-bootstrap/Button'
+import React from 'react'
+// import Toast from 'react-bootstrap/Toast'
+// import Button from 'react-bootstrap/Button'
 import { Container, Row, Col } from 'react-bootstrap'
 
 // Local libraries
 import './App.css'
 import LoadScripts from './components/load-scripts'
+import NFTs from './components/nfts'
 
-const ExampleToast = ({ children }) => {
-  const [show, toggleShow] = useState(true)
-
-  return (
-    <>
-      {!show && <Button onClick={() => toggleShow(true)}>Show Toast</Button>}
-      <Toast show={show} onClose={() => toggleShow(false)}>
-        <Toast.Header>
-          <strong className='mr-auto'>React-Bootstrap</strong>
-        </Toast.Header>
-        <Toast.Body>{children}</Toast.Body>
-      </Toast>
-    </>
-  )
-}
-
-// const App = () => (
-//   <Container className='p-3'>
-//     <Container className='p-5 mb-4 bg-light rounded-3'>
-//       <h1 className='header'>Welcome To React-Bootstrap</h1>
-//       <ExampleToast>
-//         We now have Toasts
-//         <span role='img' aria-label='tada'>
-//           🎉
-//         </span>
-//       </ExampleToast>
-//     </Container>
-//   </Container>
-// )
+let _this
 
 class App extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
 
     this.state = {
+      walletInitialized: false,
       wallet: false
     }
+
+    _this = this
   }
 
-
-
-  async componentDidMount() {
+  async componentDidMount () {
     // Initialize minimal-slp-wallet, once the library finishes loading.
     let BchWallet = false
     do {
-      if(typeof window !== 'undefined' && window.SlpWallet) {
+      if (typeof window !== 'undefined' && window.SlpWallet) {
         BchWallet = window.SlpWallet
         const options = {
           interface: 'consumer-api',
@@ -65,45 +39,67 @@ class App extends React.Component {
           // noUpdate: true
         }
 
+        const wallet = new BchWallet(null, options)
+
+        await wallet.walletInfoPromise
+        console.log(`mnemonic: ${wallet.walletInfo.mnemonic}`)
+
         this.setState({
-          wallet: new BchWallet(null, options)
+          wallet,
+          walletInitialized: true
         })
 
-        await this.state.wallet.walletInfoPromise
-        console.log(`mnemonic: ${this.state.wallet.walletInfo.mnemonic}`)
+        console.log('App ComponentDidMount() this.state.wallet: ', this.state.wallet)
+        // this.render()
       } else {
         console.log('Waiting for wallet library to load...')
       }
       await sleep(1000)
-    } while(!BchWallet)
+    } while (!BchWallet)
   }
 
-  render() {
-
+  render () {
+    console.log('App component rendered. this.state.wallet: ', this.state.wallet)
 
     return (
       <>
-      <LoadScripts />
-      <Container>
-        <Row>
-          <Col>
-            <h1 className='header'>NFT Explorer</h1>
-            <ExampleToast>
-              We now have Toasts
-              <span role='img' aria-label='tada'>
-                🎉
-              </span>
-            </ExampleToast>
-          </Col>
-        </Row>
-      </Container>
+        <LoadScripts />
+        {this.state.walletInitialized ?  <InitializedView wallet={this.state.wallet} /> : <UninitializedView />}
       </>
     )
   }
 }
 
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+function UninitializedView (props) {
+  return (
+    <Container>
+      <Row>
+        <Col>
+          <h1 className='header'>NFT Explorer</h1>
+          <p>Loading minimal-slp-wallet...</p>
+        </Col>
+      </Row>
+    </Container>
+  )
+}
+
+function InitializedView (props) {
+  return (
+    <Container>
+      <Row>
+        <Col>
+          <h1 className='header'>NFT Explorer</h1>
+        </Col>
+      </Row>
+      <Row>
+        <NFTs wallet={props.wallet} />
+      </Row>
+    </Container>
+  )
+}
+
+function sleep (ms) {
+  return new Promise(resolve => setTimeout(resolve, ms))
 }
 
 export default App

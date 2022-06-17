@@ -4,7 +4,7 @@
 
 import useScript from '../hooks/use-script'
 
-function LoadScripts() {
+function LoadScripts () {
   useScript('https://unpkg.com/minimal-slp-wallet')
 
   return true
