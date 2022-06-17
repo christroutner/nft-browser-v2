@@ -3,17 +3,14 @@
 */
 
 // Global npm libraries
-import React from 'react'
-// import Toast from 'react-bootstrap/Toast'
-// import Button from 'react-bootstrap/Button'
-import { Container, Row, Col } from 'react-bootstrap'
+import React, { useState } from 'react'
+import { Container, Row, Col, Modal, Button } from 'react-bootstrap'
 
 // Local libraries
 import './App.css'
 import LoadScripts from './components/load-scripts'
 import NFTs from './components/nfts'
-
-let _this
+import WaitingModal from './components/waiting-modal'
 
 class App extends React.Component {
   constructor (props) {
@@ -24,7 +21,6 @@ class App extends React.Component {
       wallet: false
     }
 
-    _this = this
   }
 
   async componentDidMount () {
@@ -64,25 +60,33 @@ class App extends React.Component {
     return (
       <>
         <LoadScripts />
-        {this.state.walletInitialized ?  <InitializedView wallet={this.state.wallet} /> : <UninitializedView />}
+        {this.state.walletInitialized ? <InitializedView wallet={this.state.wallet} /> : <UninitializedView />}
       </>
     )
   }
 }
 
+// This is rendered *before* the BCH wallet is initialized.
 function UninitializedView (props) {
+  const modalOptions = {
+    heading: "Loading App",
+    body: ['Loading minimal-slp-wallet']
+  }
+
   return (
     <Container>
       <Row>
         <Col>
           <h1 className='header'>NFT Explorer</h1>
-          <p>Loading minimal-slp-wallet...</p>
+
+          <WaitingModal modalOptions={modalOptions} />
         </Col>
       </Row>
     </Container>
   )
 }
 
+// This is rendered *after* the BCH wallet is initialized.
 function InitializedView (props) {
   return (
     <Container>
@@ -97,6 +101,8 @@ function InitializedView (props) {
     </Container>
   )
 }
+
+
 
 function sleep (ms) {
   return new Promise(resolve => setTimeout(resolve, ms))
