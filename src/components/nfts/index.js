@@ -26,7 +26,7 @@ class NFTs extends React.Component {
 
     const nfts = []
     for(let i=0; i < this.nftData.length; i++) {
-      nfts.push(<NFTCard key={i} nftData={this.nftData[i]} />)
+      nfts.push(<NFTCard key={`nft${i}`} nftData={this.nftData[i]} />)
     }
 
     this.setState({
