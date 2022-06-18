@@ -13,6 +13,9 @@ import NFTs from './components/nfts'
 import WaitingModal from './components/waiting-modal'
 import AsyncLoad from './services/async-load'
 
+// Token ID for Trout's NFTs
+const groupTokenId = '030563ddd65772d8e9b79b825529ed53c7d27037507b57c528788612b4911107'
+
 class App extends React.Component {
   constructor (props) {
     super(props)
@@ -22,6 +25,7 @@ class App extends React.Component {
 
     // Working array for storing modal output.
     this.modalBody = []
+    this.tokenData = {}
 
     this.state = {
       walletInitialized: false,
@@ -43,6 +47,25 @@ class App extends React.Component {
 
     this.addToModal('Getting Group Token Information')
 
+    // Get Group Token info
+    const groupData = await this.asyncLoad.getGroupData(groupTokenId)
+    // console.log(`groupData: ${JSON.stringify(groupData, null, 2)}`)
+
+    this.addToModal('Getting NFT Information')
+
+    /// Get NFT child info
+    const nftData = []
+    for(let i=0; i < groupData.nfts.length; i++) {
+      const tokenData = await this.asyncLoad.getTokenData(groupData.nfts[i])
+      nftData.push(tokenData)
+    }
+    // console.log(`nft data: ${JSON.stringify(nftData, null, 2)}`)
+
+    this.tokenData = {
+      groupData,
+      nftData
+    }
+
     await sleep(1000)
 
     this.setState({
@@ -57,7 +80,7 @@ class App extends React.Component {
     return (
       <>
         <LoadScripts />
-        {this.state.walletInitialized ? <InitializedView wallet={this.state.wallet} /> : <UninitializedView modalBody={this.state.modalBody} />}
+        {this.state.walletInitialized ? <InitializedView wallet={this.state.wallet} tokens={this.tokenData} /> : <UninitializedView modalBody={this.state.modalBody} />}
       </>
     )
   }
@@ -94,16 +117,16 @@ function UninitializedView (props) {
 // This is rendered *after* the BCH wallet is initialized.
 function InitializedView (props) {
   return (
-    <Container>
-      <Row>
-        <Col>
-          <h1 className='header'>NFT Explorer</h1>
-        </Col>
-      </Row>
-      <Row>
-        <NFTs wallet={props.wallet} />
-      </Row>
-    </Container>
+    <>
+      <Container>
+        <Row>
+          <Col>
+            <h1 className='header'>NFT Explorer</h1>
+          </Col>
+        </Row>
+      </Container>
+      <NFTs wallet={props.wallet} tokens={props.tokens} />
+    </>
   )
 }
 
