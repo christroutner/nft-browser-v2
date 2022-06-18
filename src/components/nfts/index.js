@@ -1,3 +1,6 @@
+/*
+  This is a top level component for displaying the NFTs.
+*/
 
 // Global npm libraries
 import React from 'react'
@@ -5,7 +8,6 @@ import { Container, Row, Col } from 'react-bootstrap'
 
 // Local libraries
 import NFTCard from './nft-card'
-
 
 class NFTs extends React.Component {
   constructor (props) {
@@ -25,7 +27,7 @@ class NFTs extends React.Component {
     console.log('NFT component didMount(). nftData: ', this.nftData)
 
     const nfts = []
-    for(let i=0; i < this.nftData.length; i++) {
+    for (let i = 0; i < this.nftData.length; i++) {
       nfts.push(<NFTCard key={`nft${i}`} nftData={this.nftData[i]} />)
     }
 
@@ -35,7 +37,6 @@ class NFTs extends React.Component {
   }
 
   render () {
-
     // Load spinner at startup while the wallet is being initialized.
     return (
       <>
@@ -58,13 +59,7 @@ class NFTs extends React.Component {
         </Container>
       </>
     )
-
   }
-
 }
-
-// function sleep (ms) {
-//   return new Promise(resolve => setTimeout(resolve, ms))
-// }
 
 export default NFTs

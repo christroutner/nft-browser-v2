@@ -45,7 +45,7 @@ class AsyncLoad {
   }
 
   // Get token data for a given Token ID
-  async getTokenData(tokenId) {
+  async getTokenData (tokenId) {
     const tokenData = await this.wallet.getTokenData(tokenId)
 
     // Convert the IPFS CIDs into actual data.
@@ -56,7 +56,7 @@ class AsyncLoad {
   }
 
   // Get data about a Group token
-  async getGroupData(tokenId) {
+  async getGroupData (tokenId) {
     const tokenData = await this.getTokenData(tokenId)
 
     const groupData = {
@@ -70,7 +70,7 @@ class AsyncLoad {
   }
 
   // Given an IPFS URI, this will download and parse the JSON data.
-  async getIpfsData(ipfsUri) {
+  async getIpfsData (ipfsUri) {
     const cid = ipfsUri.slice(7)
 
     const downloadUrl = `https://${cid}.ipfs.dweb.link/data.json`
