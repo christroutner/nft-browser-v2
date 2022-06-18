@@ -3,75 +3,80 @@
 */
 
 // Global npm libraries
-import React, { useState } from 'react'
-import { Container, Row, Col, Modal, Button } from 'react-bootstrap'
+import React from 'react'
+import { Container, Row, Col } from 'react-bootstrap'
 
 // Local libraries
 import './App.css'
 import LoadScripts from './components/load-scripts'
 import NFTs from './components/nfts'
 import WaitingModal from './components/waiting-modal'
+import AsyncLoad from './services/async-load'
 
 class App extends React.Component {
   constructor (props) {
     super(props)
 
+    // Encasulate dependencies
+    this.asyncLoad = new AsyncLoad()
+
+    // Working array for storing modal output.
+    this.modalBody = []
+
     this.state = {
       walletInitialized: false,
-      wallet: false
+      wallet: false,
+      modalBody: this.modalBody
     }
 
+    this.cnt = 0
   }
 
   async componentDidMount () {
-    // Initialize minimal-slp-wallet, once the library finishes loading.
-    let BchWallet = false
-    do {
-      if (typeof window !== 'undefined' && window.SlpWallet) {
-        BchWallet = window.SlpWallet
-        const options = {
-          interface: 'consumer-api',
-          restURL: 'https://free-bch.fullstack.cash'
-          // noUpdate: true
-        }
+    this.addToModal('Loading minimal-slp-wallet')
 
-        const wallet = new BchWallet(null, options)
+    await this.asyncLoad.loadWalletLib()
 
-        await wallet.walletInfoPromise
-        console.log(`mnemonic: ${wallet.walletInfo.mnemonic}`)
+    this.addToModal('Initializing wallet')
 
-        this.setState({
-          wallet,
-          walletInitialized: true
-        })
+    const wallet = await this.asyncLoad.initWallet()
 
-        console.log('App ComponentDidMount() this.state.wallet: ', this.state.wallet)
-        // this.render()
-      } else {
-        console.log('Waiting for wallet library to load...')
-      }
-      await sleep(1000)
-    } while (!BchWallet)
+    this.addToModal('Getting Group Token Information')
+
+    await sleep(1000)
+
+    this.setState({
+      wallet,
+      walletInitialized: true
+    })
   }
 
   render () {
-    console.log('App component rendered. this.state.wallet: ', this.state.wallet)
+    // console.log('App component rendered. this.state.wallet: ', this.state.wallet)
 
     return (
       <>
         <LoadScripts />
-        {this.state.walletInitialized ? <InitializedView wallet={this.state.wallet} /> : <UninitializedView />}
+        {this.state.walletInitialized ? <InitializedView wallet={this.state.wallet} /> : <UninitializedView modalBody={this.state.modalBody} />}
       </>
     )
+  }
+
+  // Add a new line to the waiting modal.
+  addToModal (inStr) {
+    this.modalBody.push(inStr)
+
+    this.setState({
+      modalBody: this.modalBody
+    })
   }
 }
 
 // This is rendered *before* the BCH wallet is initialized.
 function UninitializedView (props) {
-  const modalOptions = {
-    heading: "Loading App",
-    body: ['Loading minimal-slp-wallet']
-  }
+  // console.log('UninitializedView props: ', props)
+
+  const heading = 'Loading Blockchain Data...'
 
   return (
     <Container>
@@ -79,7 +84,7 @@ function UninitializedView (props) {
         <Col>
           <h1 className='header'>NFT Explorer</h1>
 
-          <WaitingModal modalOptions={modalOptions} />
+          <WaitingModal heading={heading} body={props.modalBody} />
         </Col>
       </Row>
     </Container>
@@ -101,8 +106,6 @@ function InitializedView (props) {
     </Container>
   )
 }
-
-
 
 function sleep (ms) {
   return new Promise(resolve => setTimeout(resolve, ms))

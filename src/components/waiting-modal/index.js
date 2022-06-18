@@ -6,41 +6,15 @@
 
 // Global npm libraries
 import React, { useState } from 'react'
-import { Container, Row, Col, Modal, Button, Spinner } from 'react-bootstrap'
+import { Container, Row, Col, Modal, Spinner } from 'react-bootstrap'
 
-class WaitingModal extends React.Component {
-  constructor (props) {
-    super(props)
-    console.log('Waiting Modal instantiated')
-    console.log('props.modalOptions: ', props.modalOptions)
+function ModalTemplate (props) {
+  const [show, setShow] = useState(true)
 
-    // Default values
-    const modalDefaults = {
-      heading: 'Modal Heading',
-      body: ['a', 'b'],
-      buttonShowL: false,
-      buttonShowR: false,
-      buttonLabelL: 'Close',
-      buttonLabelR: 'Save Changes'
-    }
+  const handleClose = () => setShow(false)
+  // const handleShow = () => setShow(true)
 
-    this.state = Object.assign({}, modalDefaults, props.modalOptions)
-  }
-
-  render() {
-    return(
-      <ModalTemplate heading={this.state.heading} body={this.state.body} />
-    )
-  }
-}
-
-function ModalTemplate(props) {
-  const [show, setShow] = useState(true);
-
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true)
-
-  return(
+  return (
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
         <Modal.Title>{props.heading}</Modal.Title>
@@ -56,15 +30,12 @@ function ModalTemplate(props) {
           </Row>
         </Container>
       </Modal.Body>
-      <Modal.Footer>
-        {props.buttonShowL ? <Button variant="secondary" onClick={handleClose}>{props.buttonLabelL}</Button> : null}
-        {props.buttonShowR ? <Button variant="primary" onClick={handleClose}>{props.buttonLabelR}</Button> : null}
-      </Modal.Footer>
+      <Modal.Footer />
     </Modal>
   )
 }
 
-function BodyList(props) {
+function BodyList (props) {
   const items = props.body
 
   const listItems = []
@@ -80,8 +51,8 @@ function BodyList(props) {
   // )
 
   // Paragraphs
-  for(let i=0; i < items.length; i++) {
-    listItems.push(<code key={items[i]}>{items[i]}</code>)
+  for (let i = 0; i < items.length; i++) {
+    listItems.push(<p key={items[i]}><code>{items[i]}</code></p>)
   }
 
   return (
@@ -89,4 +60,5 @@ function BodyList(props) {
   )
 }
 
-export default WaitingModal
+// export default WaitingModal
+export default ModalTemplate

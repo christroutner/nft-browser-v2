@@ -8,7 +8,7 @@ import NFTCard from './nft-card'
 
 const tokenId = '030563ddd65772d8e9b79b825529ed53c7d27037507b57c528788612b4911107'
 
-let _this
+// let _this
 
 class NFTs extends React.Component {
   constructor (props) {
@@ -24,7 +24,7 @@ class NFTs extends React.Component {
       wallet: props.wallet
     }
 
-    _this = this
+    // _this = this
   }
 
   async componentDidMount () {
@@ -140,8 +140,8 @@ class NFTs extends React.Component {
   }
 }
 
-function sleep (ms) {
-  return new Promise(resolve => setTimeout(resolve, ms))
-}
+// function sleep (ms) {
+//   return new Promise(resolve => setTimeout(resolve, ms))
+// }
 
 export default NFTs
