@@ -38,7 +38,7 @@ class ServerSelect extends React.Component {
 
   async componentDidMount () {
     const servers = await this.getServers()
-    console.log('Server list retrieved from GitHub Gist: ', servers)
+    // console.log('Server list retrieved from GitHub Gist: ', servers)
 
     this.setState({
       options: servers

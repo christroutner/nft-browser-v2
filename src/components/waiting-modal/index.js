@@ -23,7 +23,8 @@ function ModalTemplate (props) {
         <Container>
           <Row>
             <Col style={{ textAlign: 'center' }}>
-              <BodyList body={props.body} /><Spinner animation='border' />
+              <BodyList body={props.body} />
+              {props.hideSpinner ? null : <Spinner animation='border' />}
             </Col>
           </Row>
         </Container>

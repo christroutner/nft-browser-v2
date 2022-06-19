@@ -13,7 +13,7 @@ class NFTCard extends React.Component {
   constructor (props) {
     super(props)
 
-    console.log('NFTCard props: ', props)
+    // console.log('NFTCard props: ', props)
 
     this.tokenData = props.nftData
 
@@ -23,12 +23,8 @@ class NFTCard extends React.Component {
     }
   }
 
-  // async componentDidMount () {
-  //
-  // }
-
   render () {
-    console.log('Rendering NFT card with this token data: ', this.tokenData)
+    // console.log('Rendering NFT card with this token data: ', this.tokenData)
 
     return (
       <Row>

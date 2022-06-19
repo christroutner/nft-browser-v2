@@ -36,48 +36,59 @@ class App extends React.Component {
     this.state = {
       walletInitialized: false,
       wallet: false,
-      modalBody: this.modalBody
+      modalBody: this.modalBody,
+      hideSpinner: false
     }
 
     this.cnt = 0
   }
 
   async componentDidMount () {
-    this.addToModal('Loading minimal-slp-wallet')
+    try {
+      this.addToModal('Loading minimal-slp-wallet')
 
-    await this.asyncLoad.loadWalletLib()
+      await this.asyncLoad.loadWalletLib()
 
-    this.addToModal('Initializing wallet')
+      this.addToModal('Initializing wallet')
 
-    const wallet = await this.asyncLoad.initWallet(serverURL)
+      const wallet = await this.asyncLoad.initWallet(serverURL)
 
-    this.addToModal('Getting Group Token Information')
+      this.addToModal('Getting Group Token Information')
 
-    // Get Group Token info
-    const groupData = await this.asyncLoad.getGroupData(groupTokenId)
-    // console.log(`groupData: ${JSON.stringify(groupData, null, 2)}`)
+      // Get Group Token info
+      const groupData = await this.asyncLoad.getGroupData(groupTokenId)
+      // console.log(`groupData: ${JSON.stringify(groupData, null, 2)}`)
 
-    this.addToModal('Getting NFT Information')
+      this.addToModal('Getting NFT Information')
 
-    /// Get NFT child info
-    const nftData = []
-    for (let i = 0; i < groupData.nfts.length; i++) {
-      const tokenData = await this.asyncLoad.getTokenData(groupData.nfts[i])
-      nftData.push(tokenData)
+      /// Get NFT child info
+      const nftData = []
+      for (let i = 0; i < groupData.nfts.length; i++) {
+        const tokenData = await this.asyncLoad.getTokenData(groupData.nfts[i])
+        nftData.push(tokenData)
+      }
+      // console.log(`nft data: ${JSON.stringify(nftData, null, 2)}`)
+
+      this.tokenData = {
+        groupData,
+        nftData
+      }
+
+      this.setState({
+        wallet,
+        walletInitialized: true
+      })
+    } catch (err) {
+      this.modalBody = [
+        `Error: ${err.message}`,
+        `Try selecting a different back end server using the drop-down menu at the bottom of the app.`
+      ]
+
+      this.setState({
+        modalBody: this.modalBody,
+        hideSpinner: true
+      })
     }
-    // console.log(`nft data: ${JSON.stringify(nftData, null, 2)}`)
-
-    this.tokenData = {
-      groupData,
-      nftData
-    }
-
-    await sleep(1000)
-
-    this.setState({
-      wallet,
-      walletInitialized: true
-    })
   }
 
   render () {
@@ -87,7 +98,7 @@ class App extends React.Component {
       <>
         <GetRestUrl />
         <LoadScripts />
-        {this.state.walletInitialized ? <InitializedView wallet={this.state.wallet} tokens={this.tokenData} /> : <UninitializedView modalBody={this.state.modalBody} />}
+        {this.state.walletInitialized ? <InitializedView wallet={this.state.wallet} tokens={this.tokenData} /> : <UninitializedView modalBody={this.state.modalBody} hideSpinner={this.state.hideSpinner}/>}
         <ServerSelect />
         <Footer />
       </>
@@ -111,12 +122,12 @@ function UninitializedView (props) {
   const heading = 'Loading Blockchain Data...'
 
   return (
-    <Container>
-      <Row>
+    <Container style={{ backgroundColor: '#ddd' }}>
+      <Row style={{ padding: '25px' }}>
         <Col>
           <h1 className='header'>NFT Explorer</h1>
 
-          <WaitingModal heading={heading} body={props.modalBody} />
+          <WaitingModal heading={heading} body={props.modalBody} hideSpinner={props.hideSpinner} />
         </Col>
       </Row>
     </Container>
@@ -127,8 +138,8 @@ function UninitializedView (props) {
 function InitializedView (props) {
   return (
     <>
-      <Container>
-        <Row>
+      <Container style={{ backgroundColor: '#ddd' }}>
+        <Row style={{ padding: '25px' }}>
           <Col>
             <h1 className='header'>NFT Explorer</h1>
           </Col>
@@ -148,8 +159,8 @@ function GetRestUrl (props) {
   return (<></>)
 }
 
-function sleep (ms) {
-  return new Promise(resolve => setTimeout(resolve, ms))
-}
+// function sleep (ms) {
+//   return new Promise(resolve => setTimeout(resolve, ms))
+// }
 
 export default App
