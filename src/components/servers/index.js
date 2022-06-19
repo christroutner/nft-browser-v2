@@ -9,7 +9,7 @@ import React from 'react'
 import { Container, Row, Col, Form } from 'react-bootstrap'
 
 // Local libraries
-const GistServers = require('../../services/gist-servers')
+import GistServers from '../../services/gist-servers'
 
 const defaultOptions = [
   { value: 'https://free-bch.fullstack.cash', label: 'https://free-bch.fullstack.cash' },
@@ -36,14 +36,14 @@ class ServerSelect extends React.Component {
     }
   }
 
-  async componentDidMount () {
-    const servers = await this.getServers()
-    // console.log('Server list retrieved from GitHub Gist: ', servers)
-
-    this.setState({
-      options: servers
-    })
-  }
+  // async componentDidMount () {
+  //   const servers = await this.getServers()
+  //   // console.log('Server list retrieved from GitHub Gist: ', servers)
+  //
+  //   this.setState({
+  //     options: servers
+  //   })
+  // }
 
   // This is called when the a new drop-down item is selected.
   selectServer (event) {

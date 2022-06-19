@@ -36,4 +36,4 @@ class GistServers {
   }
 }
 
-module.exports = GistServers
+export default GistServers
