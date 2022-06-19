@@ -5,6 +5,7 @@
 // Global npm libraries
 import React from 'react'
 import { Container, Row, Col } from 'react-bootstrap'
+import { useQueryParam, StringParam } from 'use-query-params'
 
 // Local libraries
 import './App.css'
@@ -16,6 +17,9 @@ import ServerSelect from './components/servers'
 
 // Token ID for Trout's NFTs
 const groupTokenId = '030563ddd65772d8e9b79b825529ed53c7d27037507b57c528788612b4911107'
+
+// Default restURL for a back-end server.
+let serverURL = 'https://free-bch.fullstack.cash'
 
 class App extends React.Component {
   constructor (props) {
@@ -38,13 +42,14 @@ class App extends React.Component {
   }
 
   async componentDidMount () {
+
     this.addToModal('Loading minimal-slp-wallet')
 
     await this.asyncLoad.loadWalletLib()
 
     this.addToModal('Initializing wallet')
 
-    const wallet = await this.asyncLoad.initWallet()
+    const wallet = await this.asyncLoad.initWallet(serverURL)
 
     this.addToModal('Getting Group Token Information')
 
@@ -80,6 +85,7 @@ class App extends React.Component {
 
     return (
       <>
+        <GetRestUrl />
         <LoadScripts />
         {this.state.walletInitialized ? <InitializedView wallet={this.state.wallet} tokens={this.tokenData} /> : <UninitializedView modalBody={this.state.modalBody} />}
         <ServerSelect />
@@ -130,6 +136,15 @@ function InitializedView (props) {
       <NFTs wallet={props.wallet} tokens={props.tokens} />
     </>
   )
+}
+
+function GetRestUrl (props) {
+  const [restURL] = useQueryParam('restURL', StringParam)
+  // console.log('restURL: ', restURL)
+
+  serverURL = restURL
+
+  return (<></>)
 }
 
 function sleep (ms) {

@@ -27,10 +27,10 @@ class AsyncLoad {
   }
 
   // Initialize the BCH wallet
-  async initWallet () {
+  async initWallet (restURL) {
     const options = {
       interface: 'consumer-api',
-      restURL: 'https://free-bch.fullstack.cash',
+      restURL,
       noUpdate: true
     }
 
