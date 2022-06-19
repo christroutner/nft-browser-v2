@@ -52,10 +52,10 @@ class NFTs extends React.Component {
                   {this.groupData.tokenId}
                 </a>
               </p>
-              {this.state.nfts}
             </Col>
           </Row>
-          {this.nfts}
+          <Row><hr /></Row>
+          {this.state.nfts}
         </Container>
       </>
     )
