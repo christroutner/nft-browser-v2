@@ -46,13 +46,14 @@ class ServerSelect extends React.Component {
   }
 
   // This is called when the a new drop-down item is selected.
-  selectServer (value) {
+  selectServer (event) {
+    console.log('event.target.value: ', event.target.value)
+
+    const value = event.target.value
+
     if (!value) return
 
-    console.log(`Server ${value[0].value} was selected. Reloading page...`)
-    if (typeof window !== 'undefined') {
-      window.location.href = `/?restURL=${value[0].value}`
-    }
+    window.location.href = `/?restURL=${value}`
   }
 
   // render() {
@@ -83,7 +84,8 @@ class ServerSelect extends React.Component {
               Having trouble loading the NFTs? If NFTs don't load after a minute,
               then try selecting a different back-end server.
             </h5>
-            <Form.Select>
+            <Form.Select onChange={(values) => this.selectServer(values)}>
+              <option>Choose a back-end server</option>
               {items}
             </Form.Select>
             <br />
