@@ -28,8 +28,9 @@ class NFTCard extends React.Component {
 
     return (
       <Row>
-        <Col>
-          <Image src={this.tokenData.mutableData.tokenIcon} style={{border: 'black solid 5px'}} />
+        <Col  style={{ textAlign: 'center' }}>
+          <Image className="d-md-none" src={this.tokenData.mutableData.tokenIcon} style={{border: 'black solid 5px', maxWidth: '500px'}} />
+          <Image className="d-none d-md-block" src={this.tokenData.mutableData.tokenIcon} style={{border: 'black solid 5px'}} />
         </Col>
         <Col>
           <Container>
