@@ -29,18 +29,19 @@ class NFTCard extends React.Component {
     return (
       <Row>
         <Col  style={{ textAlign: 'center' }}>
-          <Image className="d-md-none" src={this.tokenData.mutableData.tokenIcon} style={{border: 'black solid 5px', maxWidth: '500px'}} />
+          <Image className="d-md-none" src={this.tokenData.mutableData.tokenIcon} style={{border: 'black solid 5px', maxWidth: '300px'}} />
           <Image className="d-none d-md-block" src={this.tokenData.mutableData.tokenIcon} style={{border: 'black solid 5px'}} />
         </Col>
         <Col>
           <Container>
             <Row>
               <Col>
+                <br />
                 <h3>{this.tokenData.genesisData.name} ({this.tokenData.genesisData.ticker})</h3>
               </Col>
             </Row>
             <Row style={{ textAlign: 'left' }}>
-              <Col>
+              <Col className="text-break">
                 <b>Token ID:</b> <a href={`https://token.fullstack.cash/?tokenid=${this.tokenData.genesisData.tokenId}`} target="_blank">{this.tokenData.genesisData.tokenId}</a><br />
                 <b>Description: </b> {this.tokenData.mutableData.description}<br />
                 <b>Content: </b>

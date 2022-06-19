@@ -24,7 +24,7 @@ class NFTs extends React.Component {
   }
 
   async componentDidMount () {
-    console.log('NFT component didMount(). nftData: ', this.nftData)
+    // console.log('NFT component didMount(). nftData: ', this.nftData)
 
     const nfts = []
     for (let i = 0; i < this.nftData.length; i++) {
@@ -42,7 +42,7 @@ class NFTs extends React.Component {
       <>
         <Container>
           <Row>
-            <Col style={{ textAlign: 'center' }}>
+            <Col className="text-break" style={{ textAlign: 'center' }}>
               <p>Loading NFTs associated with Group token{' '}
                 <a
                   href={`https://token.fullstack.cash/?tokenid=${this.groupData.tokenId}`}
