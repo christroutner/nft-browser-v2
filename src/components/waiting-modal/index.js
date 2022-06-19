@@ -23,9 +23,7 @@ function ModalTemplate (props) {
         <Container>
           <Row>
             <Col style={{ textAlign: 'center' }}>
-              <Spinner animation='border' />
-              <br />
-              <BodyList body={props.body} />
+              <BodyList body={props.body} /><Spinner animation='border' />
             </Col>
           </Row>
         </Container>

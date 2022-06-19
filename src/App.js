@@ -14,6 +14,7 @@ import NFTs from './components/nfts'
 import WaitingModal from './components/waiting-modal'
 import AsyncLoad from './services/async-load'
 import ServerSelect from './components/servers'
+import Footer from './components/footer'
 
 // Token ID for Trout's NFTs
 const groupTokenId = '030563ddd65772d8e9b79b825529ed53c7d27037507b57c528788612b4911107'
@@ -88,6 +89,7 @@ class App extends React.Component {
         <LoadScripts />
         {this.state.walletInitialized ? <InitializedView wallet={this.state.wallet} tokens={this.tokenData} /> : <UninitializedView modalBody={this.state.modalBody} />}
         <ServerSelect />
+        <Footer />
       </>
     )
   }
